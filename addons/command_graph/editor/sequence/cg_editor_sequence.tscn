@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3 uid="uid://duvqug4x1gvrl"]
+
+[ext_resource type="Script" path="res://addons/command_graph/editor/sequence/cg_editor_sequence.gd" id="1_18uv7"]
+[ext_resource type="PackedScene" uid="uid://bnrk4eph60uh2" path="res://addons/command_graph/editor/sequence/sub_nodes/board.tscn" id="2_k0rfv"]
+[ext_resource type="Texture2D" uid="uid://cmnlxbgab5h0y" path="res://addons/editor_icons/godot/editor/icons/Add.svg" id="3_ddj5k"]
+[ext_resource type="PackedScene" uid="uid://bcyl45yhcaxj" path="res://addons/command_graph/editor/sequence/sub_nodes/command_creation_tree.tscn" id="4_s4blf"]
+
+[node name="CG_EditorSequence" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_18uv7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Board" parent="VBoxContainer" instance=ExtResource("2_k0rfv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BottomRow" type="HFlowContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="CreateCommand" type="Button" parent="VBoxContainer/BottomRow"]
+layout_mode = 2
+text = "Command"
+icon = ExtResource("3_ddj5k")
+
+[node name="CommandCreationDialog" type="PopupPanel" parent="."]
+unique_name_in_owner = true
+title = "Create New Command"
+size = Vector2i(320, 240)
+
+[node name="CommandCreationTree" parent="CommandCreationDialog" instance=ExtResource("4_s4blf")]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="connection_request" from="VBoxContainer/Board" to="." method="_on_board_connection_request"]
+[connection signal="connection_to_empty" from="VBoxContainer/Board" to="." method="_on_board_connection_to_empty"]
+[connection signal="delete_nodes_request" from="VBoxContainer/Board" to="." method="_on_board_delete_nodes_request"]
+[connection signal="disconnection_request" from="VBoxContainer/Board" to="." method="_on_board_disconnection_request"]
+[connection signal="end_node_move" from="VBoxContainer/Board" to="." method="synchronize_command_resources"]
+[connection signal="popup_request" from="VBoxContainer/Board" to="." method="_on_board_popup_request"]
+[connection signal="command_chosen" from="CommandCreationDialog/CommandCreationTree" to="." method="_on_command_creation_tree_command_chosen"]

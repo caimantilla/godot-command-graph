@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3 uid="uid://dh1ga4eyfjj0w"]
+
+[ext_resource type="Script" path="res://addons/command_graph/editor/root/bottom_options/add_name_popup.gd" id="1_3a4qr"]
+
+[node name="AddNamePopup" type="PopupPanel"]
+title = "Enter name..."
+initial_position = 4
+size = Vector2i(240, 120)
+visible = true
+max_size = Vector2i(240, 120)
+script = ExtResource("1_3a4qr")
+
+[node name="MarginContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 236.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VStack" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Question" type="Label" parent="MarginContainer/VStack"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "What should the new sequence be named?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HLine" type="HBoxContainer" parent="MarginContainer/VStack"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/VStack/HLine"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Sequence name..."
+caret_blink = true
+
+[node name="ConfirmButton" type="Button" parent="MarginContainer/VStack/HLine"]
+layout_mode = 2
+text = "OK"
+
+[connection signal="text_submitted" from="MarginContainer/VStack/HLine/LineEdit" to="." method="_on_line_edit_text_submitted"]
+[connection signal="pressed" from="MarginContainer/VStack/HLine/ConfirmButton" to="." method="_on_confirm_button_pressed"]

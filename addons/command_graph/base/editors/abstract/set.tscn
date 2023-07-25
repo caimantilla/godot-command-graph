@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8lw10sid2lng"]
+
+[ext_resource type="Script" path="res://addons/command_graph/base/editors/abstract/set.gd" id="1_00jf2"]
+
+[node name="set" type="GraphNode"]
+script = ExtResource("1_00jf2")

@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyaxbacgaa1pt"]
+
+[ext_resource type="Script" path="res://addons/command_graph/editor/root/cg_editor_root.gd" id="1_lkmjh"]
+[ext_resource type="PackedScene" uid="uid://1b3ktgrlxvia" path="res://addons/command_graph/editor/root/bottom_options.tscn" id="2_mmbkn"]
+
+[node name="CG_EditorRoot" type="Control"]
+custom_minimum_size = Vector2(2.08165e-12, 256)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_lkmjh")
+
+[node name="VerticalSeparator" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="SequenceTabs" type="TabContainer" parent="VerticalSeparator"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomStrip" type="PanelContainer" parent="VerticalSeparator"]
+layout_mode = 2
+
+[node name="BottomOptions" parent="VerticalSeparator/BottomStrip" instance=ExtResource("2_mmbkn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Windows" type="Node" parent="."]
+
+[node name="AddSequenceFailedDialog" type="AcceptDialog" parent="Windows"]
+initial_position = 4
+size = Vector2i(262, 109)
+dialog_text = "Failed to add sequence.
+Maybe there's a name collision?"
+
+[node name="NewSequenceIdEntryDialog" type="ConfirmationDialog" parent="Windows"]
+unique_name_in_owner = true
+initial_position = 4
+size = Vector2i(347, 144)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/NewSequenceIdEntryDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 339.0
+offset_bottom = 95.0
+
+[node name="Label" type="Label" parent="Windows/NewSequenceIdEntryDialog/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "What should the new sequence be named?
+snake_case is preferred."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewSequenceIdEdit" type="LineEdit" parent="Windows/NewSequenceIdEntryDialog/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "New sequence ID..."
+
+[connection signal="tab_changed" from="VerticalSeparator/SequenceTabs" to="." method="_on_sequence_tabs_tab_changed"]
+[connection signal="new_sequence_requested" from="VerticalSeparator/BottomStrip/BottomOptions" to="." method="_new_sequence_requested"]
+[connection signal="sequence_removal_requested" from="VerticalSeparator/BottomStrip/BottomOptions" to="." method="_sequence_removal_requested"]
+[connection signal="about_to_popup" from="Windows/NewSequenceIdEntryDialog" to="." method="_on_new_sequence_id_entry_dialog_about_to_popup"]
+[connection signal="confirmed" from="Windows/NewSequenceIdEntryDialog" to="." method="_on_new_sequence_id_entry_dialog_confirmed"]

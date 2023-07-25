@@ -1,0 +1,1 @@
+extends CG_EditorCommand
