@@ -1,4 +1,5 @@
 @tool
+class_name CG_Command_ExpressionBranch
 extends CG_Command
 
 

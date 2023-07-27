@@ -1,4 +1,5 @@
 @tool
+class_name CG_Command_ExpressionFlow
 extends CG_Command
 
 

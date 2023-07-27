@@ -35,7 +35,9 @@ func get_package() -> CG_Package:
 
 
 
-func execute( p_sequence_id: String ) -> CG_Thread:
+## Executes the sequence passed.
+## An entrypoint can also be passed, though by default the entrypoint defined in the sequence will be used.
+func execute( p_sequence_id: String, p_entrypoint_id: String = "" ) -> CG_Thread:
 	
 	if not is_instance_valid( package ):
 		finished.emit()
@@ -50,7 +52,10 @@ func execute( p_sequence_id: String ) -> CG_Thread:
 	var thread := CG_Thread.new( self, sequence )
 	thread.finished.connect( _thread_finished_reaction )
 	
-	thread.start( sequence.entrypoint )
+	if sequence.has_command( p_entrypoint_id ):
+		thread.start( p_entrypoint_id )
+	else:
+		thread.start( sequence.entrypoint )
 	
 	return thread
 
