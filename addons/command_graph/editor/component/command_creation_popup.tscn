@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cojnfofp7fnhu"]
+
+[ext_resource type="Script" path="res://addons/command_graph/editor/component/command_creation_popup.gd" id="1_iflhu"]
+
+[node name="CommandCreationPopup" type="PopupMenu"]
+title = "Create New Command"
+visible = true
+script = ExtResource("1_iflhu")
+
+[connection signal="index_pressed" from="." to="." method="_on_index_pressed"]

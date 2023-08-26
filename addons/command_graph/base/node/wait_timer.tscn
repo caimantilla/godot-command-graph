@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://digbelbw14kbx"]
+
+[ext_resource type="Script" path="res://addons/command_graph/base/node/wait_timer.gd" id="1_fatuy"]
+
+[node name="wait_timer" type="GraphNode"]
+title = "Wait Timer"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+script = ExtResource("1_fatuy")
+
+[node name="SecondsSpinbox" type="SpinBox" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+min_value = 0.05
+max_value = 999.0
+step = 0.05
+value = 998.95
+alignment = 1
+prefix = "Wait"
+suffix = "Second(s)"
+
+[node name="IgnoreTimeScaleCheckBox" type="CheckBox" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Even if the game slows down or speeds up, the time to wait will remain constant.
+This should usually be disabled."
+text = "Ignore Time Scale"
+
+[connection signal="value_changed" from="SecondsSpinbox" to="." method="synchronize" unbinds=1]
+[connection signal="toggled" from="IgnoreTimeScaleCheckBox" to="." method="synchronize" unbinds=1]
