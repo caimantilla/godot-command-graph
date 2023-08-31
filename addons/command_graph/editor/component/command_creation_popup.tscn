@@ -1,10 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://cojnfofp7fnhu"]
+[gd_scene load_steps=2 format=1]
 
-[ext_resource type="Script" path="res://addons/command_graph/editor/component/command_creation_popup.gd" id="1_iflhu"]
+[ext_resource path="res://addons/command_graph/editor/component/command_creation_popup.gd" type="Script" id=1]
 
-[node name="CommandCreationPopup" type="PopupMenu"]
-title = "Create New Command"
-visible = true
-script = ExtResource("1_iflhu")
+[node name="Command Creation Popup" type="PopupMenu"]
 
-[connection signal="index_pressed" from="." to="." method="_on_index_pressed"]
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 20.0
+margin/bottom = 20.0
+popup/exclusive = false
+items = [  ]
+script/script = ExtResource( 1 )
+
+[connection signal="item_pressed" from="." to="." method="_on_index_pressed"]
+
+

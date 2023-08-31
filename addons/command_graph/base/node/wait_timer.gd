@@ -1,19 +1,16 @@
-@tool
-extends CommandGraphNode
+tool
+extends "res://addons/command_graph/abstract/command_graph_node.gd"
 
 
-@onready var seconds_spinbox = %"SecondsSpinbox"
-@onready var ignore_time_scale_checkbox = %"IgnoreTimeScaleCheckBox"
+onready var seconds_spinbox = get_node("Seconds Spinbox")
 
 
 func _initialize():
-	seconds_spinbox.value = command.seconds
-	ignore_time_scale_checkbox.button_pressed = command.ignore_time_scale
+	seconds_spinbox.set_value(command.get_seconds())
 
 
 func _synchronize():
-	command.seconds = seconds_spinbox.value
-	command.ignore_time_scale = ignore_time_scale_checkbox.button_pressed
+	command.set_seconds(seconds_spinbox.get_value())
 
 
 
@@ -23,14 +20,16 @@ func _get_input_slot():
 
 func _set_outgoing_connection(outgoing_connection):
 	if outgoing_connection["slot"] == 0:
-			command.next_command_id = outgoing_connection["command"]
+			command.set_next_command_id(outgoing_connection["command"])
 
 func _get_outgoing_connections():
-	var outgoing_connections = [
+	return [
 		{
 			"slot": 0,
-			"command": command.next_command_id,
+			"command": command.get_next_command_id(),
 		}
 	]
-	
-	return outgoing_connections
+
+
+func _on_Seconds_Spinbox_value_changed( value ):
+	synchronize()

@@ -1,5 +1,4 @@
-@tool
-class_name CommandGraphNode
+tool
 extends GraphNode
 
 
@@ -11,52 +10,68 @@ enum NodeState {
 }
 
 
-var plugin: CommandGraphEditorPlugin = null
+var plugin = null setget set_plugin, get_plugin
 
-var command: Command = null
+var command = null setget set_command, get_command
 
-var _node_state := NodeState.EMPTY
+var _node_state = NodeState.EMPTY
 
 
 
-func _notification(what: int) -> void:
+func _notification(what):
 	if what == NOTIFICATION_THEME_CHANGED:
 		update_styling()
 
+
+func set_plugin(value):
+	plugin = value
+
+func get_plugin():
+	return plugin
+
+
+func set_command(value):
+	command = value
+
+func get_command():
+	return command
 
 
 ######
 # public functions
 
-func initialize() -> void:
-	if plugin == null or command == null:
+func initialize():
+#	if plugin == null or command == null:
+	if command == null:
 		return
 	
 	_node_state = NodeState.INITIALIZING
 	
-	var dpi_scale: float = 1.0
-	if plugin != null and Engine.is_editor_hint():
-		dpi_scale = plugin.get_editor_interface().get_editor_scale()
+	var dpi_scale = 1.0
+#	if plugin != null and Engine.is_editor_hint():
+#		dpi_scale = plugin.get_editor_interface().get_editor_scale()
 	
 	
-	name = command.get_id()
-	title = "%s (%s)" % [command.get_editor_name(), command.get_id()]
-	position_offset.x = command.graph_position_x * dpi_scale
-	position_offset.y = command.graph_position_y * dpi_scale
+	set_name(command.get_id())
+	set_title("%s (%s)" % [command.get_editor_name(), command.get_id()])
+	set_offset(Vector2(command.get_graph_position_x() * dpi_scale, command.get_graph_position_y() * dpi_scale))
 	
 	_initialize()
 	
 	# Rather than connect the signal on each command node scene, better just do it here
-	if not position_offset_changed.is_connected(synchronize):
-		position_offset_changed.connect(synchronize)
-	show_close = true
+	if not is_connected("offset_changed", self, "synchronize"):
+		connect("offset_changed", self, "synchronize")
+	set_show_close_button(true)
+	set_h_size_flags(0)
+	set_v_size_flags(0)
 	
 	_node_state = NodeState.SAFE
 	update_styling()
 
 
-func synchronize() -> void:
-	if plugin == null or command == null:
+func synchronize():
+#	if plugin == null or command == null:
+	if command == null:
 		return
 	
 	if _node_state != NodeState.SAFE:
@@ -65,78 +80,112 @@ func synchronize() -> void:
 	_node_state = NodeState.SYNCHRONIZING
 	
 	
-	var dpi_scale: float = 1.0
-	if plugin != null and Engine.is_editor_hint():
-		dpi_scale = plugin.get_editor_interface().get_editor_scale()
+	var dpi_scale = 1.0
+#	if plugin != null and Engine.is_editor_hint():
+#		dpi_scale = plugin.get_editor_interface().get_editor_scale()
 	
-	command.graph_position_x = roundf(position_offset.x / dpi_scale)
-	command.graph_position_y = roundf(position_offset.y / dpi_scale)
+	command.set_graph_position_x(round(get_offset().x / dpi_scale))
+	command.set_graph_position_y(round(get_offset().y / dpi_scale))
 	
 	_synchronize()
 	
 	_node_state = NodeState.SAFE
 
 
-func update_styling() -> void:
+func update_styling():
 	if _node_state == NodeState.SAFE:
 		_update_styling()
 
 
-func get_input_slot() -> int:
+func get_input_slot():
 	return _get_input_slot()
 
-func get_input_port() -> int:
+func get_input_port():
 	return input_get_port_from_slot(get_input_slot())
 
 
 
 ## Returns the outgoing connections based on the state of the command.
 ## Each entry needs to contain the "slot" and "command" properties.
-func get_outgoing_connections() -> Array:
+func get_outgoing_connections():
 	var outgoing_connections = []
 	
 	if command != null and _node_state == NodeState.SAFE:
-		outgoing_connections.append_array(_get_outgoing_connections())
+		for outgoing_connection in _get_outgoing_connections():
+			outgoing_connections.append(outgoing_connection)
 	
 	for outgoing_connection in outgoing_connections:
-		if "slot" in outgoing_connection:
+		if outgoing_connection.has("slot"):
 			outgoing_connection["port"] = output_get_port_from_slot(outgoing_connection["slot"])
 	
 	return outgoing_connections
 
 
-func set_outgoing_connection(outgoing_connection) -> void:
+func set_outgoing_connection(outgoing_connection):
 	outgoing_connection["slot"] = output_get_slot_from_port(outgoing_connection["port"])
+	print("Slot: ", outgoing_connection["slot"], "\nPort: ", outgoing_connection["port"])
 	_set_outgoing_connection(outgoing_connection)
 
 
 
 # Utility!!
 
-func input_get_slot_from_port(port: int) -> int:
-	return get_connection_input_slot(port)
-
-
-func input_get_port_from_slot(slot: int) -> int:
-	var port: int = slot
-	var open_count: int = get_connection_input_count()
+func input_get_slot_from_port(port):
+	var input_count = 0
+	for child in get_children():
+		if child extends Control:
+			input_count += 1
 	
-	for i in slot:
+	var map = {}
+	
+	var current_port = 0
+	
+	for current_slot in range(input_count):
+		if is_slot_enabled_left(current_slot):
+			map[current_port] = current_slot
+			current_port += 1
+	
+	if map.has(port):
+		return map[port]
+	printerr("Failed to retrieve an input slot form port %02d." % port)
+	return -1
+
+
+func input_get_port_from_slot(slot):
+	var port = slot
+	
+	for i in range(slot):
 		if not is_slot_enabled_left(i):
 			port -= 1
 	
 	return port
 
 
-func output_get_slot_from_port(port: int) -> int:
-	return get_connection_output_slot(port)
-
-
-func output_get_port_from_slot(slot: int) -> int:
-	var port: int = slot
-	var open_count: int = get_connection_output_count()
+func output_get_slot_from_port(port):
+	var output_count = 0
+	for child in get_children():
+		if child extends Control:
+			output_count += 1
 	
-	for i in slot:
+	var map = {}
+	
+	var current_port = 0
+	
+	for current_slot in range(output_count):
+		if is_slot_enabled_right(current_slot):
+			map[current_port] = current_slot
+			current_port += 1
+	
+	if map.has(port):
+		return map[port]
+	printerr("Failed to retrieve an output slot from port %02d" % port)
+	return -1
+
+
+func output_get_port_from_slot(slot):
+	var port = slot
+	
+	for i in range(slot):
 		if not is_slot_enabled_right(i):
 			port -= 1
 	
@@ -148,25 +197,25 @@ func output_get_port_from_slot(slot: int) -> int:
 # Virtuals below
 
 
-func _initialize() -> void:
+func _initialize():
 	pass
 
 
-func _synchronize() -> void:
+func _synchronize():
 	pass
 
 
-func _update_styling() -> void:
+func _update_styling():
 	pass
 
 
-func _get_input_slot() -> int:
+func _get_input_slot():
 	return -1
 
 
-func _get_outgoing_connections() -> Array:
+func _get_outgoing_connections():
 	return []
 
 
-func _set_outgoing_connection(outgoing_connection) -> void:
+func _set_outgoing_connection(outgoing_connection):
 	pass

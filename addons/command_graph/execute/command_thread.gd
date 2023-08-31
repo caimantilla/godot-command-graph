@@ -1,21 +1,20 @@
-@tool
-class_name CommandThread
+tool
 extends Node
 
 
 signal finished()
-signal new_thread_requested(start_command_id: String)
+signal new_thread_requested(start_command_id)
 
 
-var dependencies: CommandDependencies = null
-var sequence: CommandSequence = null
+var dependencies = null
+var sequence = null
 
 
-var _current_command: Command = null
-var _current_command_state: CommandState = null
+var _current_command = null
+var _current_command_state = null
 
 
-func _init(p_dependencies: CommandDependencies, p_sequence: CommandSequence) -> void:
+func _init(p_dependencies = null, p_sequence = null):
 	if p_dependencies == null or p_sequence == null:
 		printerr("Valid dependencies and sequence objects must be passed when initializing a command thread.")
 		return
@@ -24,31 +23,31 @@ func _init(p_dependencies: CommandDependencies, p_sequence: CommandSequence) -> 
 	sequence = p_sequence
 
 
-func is_finished() -> bool:
+func is_finished():
 	return _current_command_state == null
 
 
-func start(from_command_id: String) -> void:
+func start(from_command_id):
 	if _current_command_state != null:
-		_current_command_state.finished.disconnect(_process_state_finished)
-		_current_command_state.new_threads_requested.disconnect(_process_state_new_threads_requested)
+		_current_command_state.disconnect("finished", self, "_process_state_finished")
+		_current_command_state.disconnect("new_threads_requested", self, "_process_state_new_threads_requested")
 		_current_command_state.queue_free()
 	
 	_current_command = null
 	_current_command_state = null
 	
 	if not sequence.has_command(from_command_id):
-		finished.emit()
+		emit_signal("finished")
 		return
 	
 	_current_command = sequence.get_command(from_command_id)
 	_current_command_state = _current_command.execute(dependencies)
-	_current_command_state.name = "%s State" % _current_command.get_id()
+	_current_command_state.set_name("%s State" % _current_command.get_id())
 	add_child(_current_command_state, true)
 	
 	# If finished immediately, these will be disconnected.
-	_current_command_state.finished.connect(_process_state_finished)
-	_current_command_state.new_threads_requested.connect(_process_state_new_threads_requested)
+	_current_command_state.connect("finished", self, "_process_state_finished")
+	_current_command_state.connect("new_threads_requested", self, "_process_state_new_threads_requested")
 	
 #	dependencies.tree.create_timer(5.0).timeout.connect(func(): print_debug(_current_command_state.finished.is_connected(_process_state_finished)), CONNECT_ONE_SHOT)
 	
@@ -60,18 +59,18 @@ func start(from_command_id: String) -> void:
 		start(_current_command_state.get_next_command_id())
 
 
-func _request_new_threads(command_ids: PackedStringArray) -> void:
+func _request_new_threads(command_ids):
 	for command_id in command_ids:
-		new_thread_requested.emit(command_id)
+		emit_signal("new_thread_requested", command_id)
 
 
-func _process_state_finished() -> void:
+func _process_state_finished():
 	if _current_command_state != null:
 		var next_command_id = _current_command_state.get_next_command_id()
 		start(next_command_id)
 
 
-func _process_state_new_threads_requested() -> void:
+func _process_state_new_threads_requested():
 	if _current_command_state != null:
 		var command_ids = _current_command_state.get_new_thread_command_ids()
 		_request_new_threads(command_ids)

@@ -1,14 +1,13 @@
-@tool
-class_name CommandDependencies
+tool
 extends Node
 
 
-var tree: SceneTree = null
+var tree = null
 
 
-func _enter_tree() -> void:
+func _enter_tree():
 	tree = get_tree()
 
 
-func _exit_tree() -> void:
+func _exit_tree():
 	tree = null

@@ -1,8 +1,8 @@
-@tool
-extends Command
+tool
+extends "res://addons/command_graph/abstract/command.gd"
 
 
-@export_multiline var comment_string: String = ""
+export(String, MULTILINE) var comment_string = "" setget set_comment_string, get_comment_string
 
 
 static func get_editor_id():
@@ -16,3 +16,10 @@ static func get_editor_description():
 
 static func get_editor_scene_path():
 	return "res://addons/command_graph/base/node/comment.tscn"
+
+
+func set_comment_string(value):
+	comment_string = value
+
+func get_comment_string():
+	return comment_string

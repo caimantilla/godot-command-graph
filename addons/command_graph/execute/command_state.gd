@@ -1,5 +1,4 @@
-@tool
-class_name CommandState
+tool
 extends Node
 
 
@@ -7,29 +6,29 @@ signal finished()
 signal new_threads_requested()
 
 
-var _finished: bool = false
-var _next_command_id: String = ""
-var _new_thread_command_ids: PackedStringArray = PackedStringArray()
+var _finished = false
+var _next_command_id = ""
+var _new_thread_command_ids = []
 
 
-func finish(next_command_id: String) -> void:
+func finish(next_command_id):
 	_finished = true
 	_next_command_id = next_command_id
 	
-	finished.emit()
+	emit_signal("finished")
 
 
-func is_finished() -> bool:
+func is_finished():
 	return _finished
 
-func get_next_command_id() -> String:
+func get_next_command_id():
 	return _next_command_id
 
 
-func get_new_thread_command_ids() -> PackedStringArray:
+func get_new_thread_command_ids():
 	return _new_thread_command_ids
 
 
-func start_new_threads(command_ids: PackedStringArray) -> void:
+func start_new_threads(command_ids):
 	_new_thread_command_ids = command_ids
-	new_threads_requested.emit()
+	emit_signal("new_threads_requested")

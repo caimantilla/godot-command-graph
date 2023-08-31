@@ -3,8 +3,8 @@
 ##############
 
 
-@tool
-extends Command
+tool
+extends "res://addons/command_graph/abstract/command.gd"
 
 
 enum ThreadExecutionMode {
@@ -14,16 +14,16 @@ enum ThreadExecutionMode {
 
 
 ## The next sequential command's ID.
-@export var next_command_id: String = ""
+export(String) var next_command_id = ""
 
 ## Tells whether to wait for each thread to finish before progressing to the next command.
-@export var wait_execution_finish_to_proceed: bool = true
+export(bool) var wait_execution_finish_to_proceed = true
 
 ## The way to execute the threads started.
-@export var thread_execution_mode := ThreadExecutionMode.SEQUENTIAL
+export(int, "Sequential", "Simultaneous") var thread_execution_mode = ThreadExecutionMode.SEQUENTIAL
 
 ## IDs of each thread to start.
-@export var thread_starter_ids := PackedStringArray()
+export(StringArray) var thread_starter_ids = StringArray()
 
 
 func execute(dependencies):
