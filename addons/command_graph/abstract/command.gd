@@ -1,7 +1,8 @@
 @tool
-class_name Command
+class_name CG_Command
 extends Resource
 ## A stateless command.
+##
 ## Provided reference to the game state, manipulating it based on its parameters.
 ## Should never store any state. CommandState is used for that purpose.
 
@@ -12,16 +13,16 @@ signal id_changed(from: String, to: String)
 
 ## The command's horizontal position in the graph.
 ## Only relevant to the editor.
-@export var graph_position_x: float = 0.0
+@export var graph_position_x: int = 0
 
 ## The command's vertical position in the graph.
 ## Only relevant to the editor.
-@export var graph_position_y: float = 0.0
+@export var graph_position_y: int = 0
 
 
 ## Sets the command's ID.
 func set_id(id: String) -> void:
-	if resource_name != id:
+	if (resource_name != id):
 		var old = resource_name
 		resource_name = id
 		id_changed.emit(old, resource_name)
@@ -31,31 +32,57 @@ func get_id() -> String:
 	return resource_name
 
 
+## Return's the command type's ID.
 static func get_editor_id() -> String:
+	return _get_editor_id()
+
+## Returns the command type's name.
+static func get_editor_name() -> String:
+	return _get_editor_name()
+
+## Returns the command type's description.
+static func get_editor_description() -> String:
+	return _get_editor_description()
+
+## Returns the path to the CommandGraphNode scene used to edit the command type.
+static func get_editor_scene_path() -> String:
+	return _get_editor_scene_path()
+
+
+## Called on each of the sequence's commands whenever a command's ID changes (or it's deleted, if "to" is blank).
+## All references to the command should be updated, if any are found.
+func update_command_references(from: String, to: String) -> void:
+	_update_command_references(from, to)
+
+## Begins execution, returning the state of the command.
+func execute(dependencies: CG_CommandDependencies) -> CG_CommandState:
+	return _execute(dependencies)
+
+
+## Virtual
+static func _get_editor_id() -> String:
 	return "command"
 
-## Virtual function which returns the command's name.
-static func get_editor_name() -> String:
+## Virtual
+static func _get_editor_name() -> String:
 	return "Abstract Command"
 
-## Virtual function which returns the command's description.
-static func get_editor_description() -> String:
-	return "The base for commands."
+## Virtual
+static func _get_editor_description() -> String:
+	return "The base command type."
 
-## Virtual function which returns the path to the CommandGraphNode scene used to edit the command.
-static func get_editor_scene_path() -> String:
+## Virtual
+static func _get_editor_scene_path() -> String:
 	return ""
 
 
-## Virtual function which is called on each of the sequence's commands whenever a command's ID changes (or it's deleted, if "to" is blank).
-## All references to the command should be updated, if any are found.
-func update_command_references(from: String, to: String) -> void:
+## Virtual
+func _update_command_references(from: String, to: String) -> void:
 	pass
 
-
-## Virtual function which begins execution, returning the state of the command.
-func execute(dependencies: CommandDependencies) -> CommandState:
-	printerr("Can't execute an abstract command.")
-	var state = CommandState.new()
+## Virtual
+func _execute(dependencies: CG_CommandDependencies) -> CG_CommandState:
+	assert("Execution function not defined.")
+	var state := CG_CommandState.new()
 	state.finish("")
 	return state

@@ -1,5 +1,5 @@
 @tool
-class_name CommandRuntime
+class_name CG_CommandRuntime
 extends Node
 
 
@@ -8,12 +8,12 @@ signal finished()
 
 ## The dependencies passed.
 ## This can be extended to add game-specific dependencies.
-var dependencies: CommandDependencies = null
-var sequence: CommandSequence = null
-var threads: Array[CommandThread] = []
+var dependencies: CG_CommandDependencies = null
+var sequence: CG_CommandSequence = null
+var threads: Array[CG_CommandThread] = []
 
 
-func _init(p_dependencies: CommandDependencies = null, p_sequence: CommandSequence = null) -> void:
+func _init(p_dependencies: CG_CommandDependencies = null, p_sequence: CG_CommandSequence = null) -> void:
 	if p_dependencies == null or p_sequence == null:
 		printerr("CommandRuntime requires valid dependencies and sequence objects to initialize.")
 		return
@@ -47,9 +47,9 @@ func execute(from_command: String = "") -> void:
 	_start_new_thread(from_command)
 
 
-func _start_new_thread(from_command_id: String) -> CommandThread:
+func _start_new_thread(from_command_id: String) -> CG_CommandThread:
 	if sequence.has_command(from_command_id):
-		var thread = CommandThread.new(dependencies, sequence)
+		var thread = CG_CommandThread.new(dependencies, sequence)
 		thread.name = "Thread %d" % (threads.size() + 1)
 		add_child(thread, true, INTERNAL_MODE_DISABLED)
 		
@@ -61,7 +61,7 @@ func _start_new_thread(from_command_id: String) -> CommandThread:
 
 func _handle_thread_finish() -> void:
 	for i in range(threads.size() - 1, -1, -1):
-		var thread := threads[i]
+		var thread := threads[i] as CG_CommandThread
 		if thread.is_finished():
 			threads.remove_at(i)
 			thread.queue_free()

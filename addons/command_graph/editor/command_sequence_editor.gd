@@ -2,9 +2,9 @@
 extends MarginContainer
 
 
-var plugin: CommandGraphEditorPlugin = null
+var plugin = null
 
-var sequence: CommandSequence = null
+var sequence: CG_CommandSequence = null
 
 
 @onready var no_sequence_label = %"NoSequenceLabel"
@@ -30,7 +30,7 @@ func is_loading() -> bool:
 	return _currently_loading
 
 
-func load_sequence(p_sequence: CommandSequence) -> void:
+func load_sequence(p_sequence: CG_CommandSequence) -> void:
 	if p_sequence == null:
 		unload_sequence()
 		return
@@ -51,16 +51,16 @@ func unload_sequence() -> void:
 
 
 func has_command_node(command) -> bool:
-	if command is Command:
+	if command is CG_Command:
 		command = command.get_id()
 	return _command_nodes.has(command)
 
 
-func get_command_node(command) -> CommandGraphNode:
-	if command is Command:
+func get_command_node(command) -> CG_CommandGraphNode:
+	if command is CG_Command:
 		command = command.get_id()
 	if _command_nodes.has(command):
-		return _command_nodes[command] as CommandGraphNode
+		return _command_nodes[command] as CG_CommandGraphNode
 	return null
 
 
@@ -82,7 +82,7 @@ func reload_nodes() -> void:
 			var command_scene = load(command_scene_path) as PackedScene
 			if command_scene != null:
 				
-				var command_node = command_scene.instantiate() as CommandGraphNode
+				var command_node = command_scene.instantiate() as CG_CommandGraphNode
 				command_node.plugin = plugin
 				command_node.command = command
 				
@@ -120,7 +120,7 @@ func reload_connection_lines() -> void:
 	_currently_loading = was_loading
 
 
-func add_command(command: Command) -> void:
+func add_command(command: CG_Command) -> void:
 	if sequence != null:
 		command.graph_position_x = roundf(_next_node_instantiation_offset.x)
 		command.graph_position_y = roundf(_next_node_instantiation_offset.y)
@@ -129,13 +129,13 @@ func add_command(command: Command) -> void:
 		reload_nodes()
 
 
-func erase_command(command: Command) -> void:
+func erase_command(command: CG_Command) -> void:
 	if sequence != null:
 		if sequence.remove_command(command):
 			reload_nodes()
 
 
-func create_connection(from_command: Command, from_port: int, to_command: Command) -> bool:
+func create_connection(from_command: CG_Command, from_port: int, to_command: CG_Command) -> bool:
 	if is_loading():
 		return false
 	
@@ -153,7 +153,7 @@ func create_connection(from_command: Command, from_port: int, to_command: Comman
 	return true
 
 
-func erase_connection(command: Command, at_port: int) -> void:
+func erase_connection(command: CG_Command, at_port: int) -> void:
 	if is_loading():
 		return
 	
@@ -180,7 +180,7 @@ func prompt_command_creation_popup() -> void:
 
 func _create_command_from_script(script: Script) -> void:
 	var instance = script.new()
-	if instance is Command:
+	if instance is CG_Command:
 		add_command(instance)
 	else:
 		if instance is Object and not instance is RefCounted:

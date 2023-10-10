@@ -1,5 +1,5 @@
 @tool
-class_name CommandState
+class_name CG_CommandState
 extends Node
 
 

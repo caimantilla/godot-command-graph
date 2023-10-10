@@ -1,5 +1,5 @@
 @tool
-class_name CommandThread
+class_name CG_CommandThread
 extends Node
 
 
@@ -7,15 +7,15 @@ signal finished()
 signal new_thread_requested(start_command_id: String)
 
 
-var dependencies: CommandDependencies = null
-var sequence: CommandSequence = null
+var dependencies: CG_CommandDependencies = null
+var sequence: CG_CommandSequence = null
 
 
-var _current_command: Command = null
-var _current_command_state: CommandState = null
+var _current_command: CG_Command = null
+var _current_command_state: CG_CommandState = null
 
 
-func _init(p_dependencies: CommandDependencies, p_sequence: CommandSequence) -> void:
+func _init(p_dependencies: CG_CommandDependencies, p_sequence: CG_CommandSequence) -> void:
 	if p_dependencies == null or p_sequence == null:
 		printerr("Valid dependencies and sequence objects must be passed when initializing a command thread.")
 		return

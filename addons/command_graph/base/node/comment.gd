@@ -1,5 +1,5 @@
 @tool
-extends CommandGraphNode
+extends CG_CommandGraphNode
 
 
 @onready var comment_text_edit = %"CommentTextEdit"

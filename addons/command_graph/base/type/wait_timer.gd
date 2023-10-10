@@ -1,5 +1,5 @@
 @tool
-extends Command
+extends CG_Command
 
 
 @export var next_command_id: String = ""
@@ -7,21 +7,21 @@ extends Command
 @export var ignore_time_scale: bool = false
 
 
-static func get_editor_id():
+static func _get_editor_id():
 	return "wait_timer"
 
-static func get_editor_name():
+static func _get_editor_name():
 	return "Wait Timer"
 
-static func get_editor_description():
-	return "Waits a specific amount of seconds before proceeding."
+static func _get_editor_description():
+	return "Waits a set number of seconds before proceeding."
 
-static func get_editor_scene_path():
+static func _get_editor_scene_path():
 	return "res://addons/command_graph/base/node/wait_timer.tscn"
 
 
-func execute(dependencies):
-	var state = CommandState.new()
+func _execute(dependencies):
+	var state = CG_CommandState.new()
 	
 	if dependencies.tree == null or is_zero_approx(seconds) or seconds < 0.0:
 		state.finish(next_command_id)
@@ -32,6 +32,6 @@ func execute(dependencies):
 	return state
 
 
-func update_command_references(from, to):
+func _update_command_references(from, to):
 	if from == next_command_id:
 		next_command_id = to

@@ -1,5 +1,5 @@
 @tool
-class_name CommandGraphEditorPlugin
+class_name CG_EditorPlugin
 extends EditorPlugin
 
 
@@ -9,7 +9,7 @@ const _DEFAULT_COMMAND_SCRIPT_PATHS = [
 	"res://addons/command_graph/base/type/wait_timer.gd",
 ]
 
-const CommandSequenceEditor = preload("editor/command_sequence_editor.tscn")
+var CommandSequenceEditor = load("res://addons/command_graph/editor/command_sequence_editor.tscn")
 
 
 var sequence_editor = null
@@ -34,12 +34,12 @@ func _exit_tree() -> void:
 
 
 func _handles(object):
-	if object is CommandSequence:
+	if object is CG_CommandSequence:
 		return true
 
 
 func _edit(object):
-	if object is CommandSequence:
+	if object is CG_CommandSequence:
 		if sequence_editor != null and sequence_editor.sequence != object:
 			sequence_editor.load_sequence(object)
 		make_bottom_panel_item_visible(sequence_editor)

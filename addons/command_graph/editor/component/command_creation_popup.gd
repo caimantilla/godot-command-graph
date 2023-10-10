@@ -5,7 +5,7 @@ extends PopupMenu
 signal command_selected(command_script: Script)
 
 
-var plugin: CommandGraphEditorPlugin = null
+var plugin = null
 
 
 func initialize() -> void:

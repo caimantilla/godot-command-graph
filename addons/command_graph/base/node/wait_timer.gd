@@ -1,5 +1,5 @@
 @tool
-extends CommandGraphNode
+extends CG_CommandGraphNode
 
 
 @onready var seconds_spinbox = %"SecondsSpinbox"

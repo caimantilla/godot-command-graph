@@ -1,6 +1,9 @@
 @tool
-class_name CommandGraphNode
+class_name CG_CommandGraphNode
 extends GraphNode
+
+
+signal close_request()
 
 
 enum NodeState {
@@ -11,9 +14,9 @@ enum NodeState {
 }
 
 
-var plugin: CommandGraphEditorPlugin = null
+var plugin: CG_EditorPlugin = null
 
-var command: Command = null
+var command: CG_Command = null
 
 var _node_state := NodeState.EMPTY
 
@@ -22,6 +25,14 @@ var _node_state := NodeState.EMPTY
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_THEME_CHANGED:
 		update_styling()
+
+
+
+########
+# Notifiers
+
+func notify_close_request() -> void:
+	close_request.emit()
 
 
 
@@ -36,10 +47,12 @@ func initialize() -> void:
 	
 	var dpi_scale: float = 1.0
 	if plugin != null and Engine.is_editor_hint():
-		dpi_scale = plugin.get_editor_interface().get_editor_scale()
+		#dpi_scale = plugin.get_editor_interface().get_editor_scale()
+		dpi_scale = EditorInterface.get_editor_scale()
 	
 	
 	name = command.get_id()
+	@warning_ignore("static_called_on_instance")
 	title = "%s (%s)" % [command.get_editor_name(), command.get_id()]
 	position_offset.x = command.graph_position_x * dpi_scale
 	position_offset.y = command.graph_position_y * dpi_scale
@@ -49,7 +62,12 @@ func initialize() -> void:
 	# Rather than connect the signal on each command node scene, better just do it here
 	if not position_offset_changed.is_connected(synchronize):
 		position_offset_changed.connect(synchronize)
-	show_close = true
+	
+	var close_button = Button.new()
+	close_button.pressed.connect(notify_close_request)
+	close_button.size_flags_horizontal = Control.SIZE_SHRINK_END
+	close_button.icon = get_theme_icon("RemoveInternal", "EditorIcons")
+	get_titlebar_hbox().add_child(close_button)
 	
 	_node_state = NodeState.SAFE
 	update_styling()
@@ -67,10 +85,11 @@ func synchronize() -> void:
 	
 	var dpi_scale: float = 1.0
 	if plugin != null and Engine.is_editor_hint():
-		dpi_scale = plugin.get_editor_interface().get_editor_scale()
+		#dpi_scale = plugin.get_editor_interface().get_editor_scale()
+		dpi_scale = EditorInterface.get_editor_scale()
 	
-	command.graph_position_x = roundf(position_offset.x / dpi_scale)
-	command.graph_position_y = roundf(position_offset.y / dpi_scale)
+	command.graph_position_x = roundi(position_offset.x / dpi_scale)
+	command.graph_position_y = roundi(position_offset.y / dpi_scale)
 	
 	_synchronize()
 	
@@ -114,12 +133,12 @@ func set_outgoing_connection(outgoing_connection) -> void:
 # Utility!!
 
 func input_get_slot_from_port(port: int) -> int:
-	return get_connection_input_slot(port)
+	return get_input_port_slot(port)
 
 
 func input_get_port_from_slot(slot: int) -> int:
 	var port: int = slot
-	var open_count: int = get_connection_input_count()
+	#var open_count: int = get_input_port_count()
 	
 	for i in slot:
 		if not is_slot_enabled_left(i):
@@ -129,12 +148,12 @@ func input_get_port_from_slot(slot: int) -> int:
 
 
 func output_get_slot_from_port(port: int) -> int:
-	return get_connection_output_slot(port)
+	return get_output_port_slot(port)
 
 
 func output_get_port_from_slot(slot: int) -> int:
 	var port: int = slot
-	var open_count: int = get_connection_output_count()
+	#var open_count: int = get_output_port_count()
 	
 	for i in slot:
 		if not is_slot_enabled_right(i):
@@ -168,5 +187,5 @@ func _get_outgoing_connections() -> Array:
 	return []
 
 
-func _set_outgoing_connection(outgoing_connection) -> void:
+func _set_outgoing_connection(_outgoing_connection) -> void:
 	pass

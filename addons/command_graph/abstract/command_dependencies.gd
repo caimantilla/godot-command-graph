@@ -1,5 +1,5 @@
 @tool
-class_name CommandDependencies
+class_name CG_CommandDependencies
 extends Node
 
 

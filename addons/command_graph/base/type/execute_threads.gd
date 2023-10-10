@@ -4,7 +4,7 @@
 
 
 @tool
-extends Command
+extends CG_Command
 
 
 enum ThreadExecutionMode {
@@ -26,8 +26,8 @@ enum ThreadExecutionMode {
 @export var thread_starter_ids := PackedStringArray()
 
 
-func execute(dependencies):
-	var state = CommandState.new()
+func _execute(dependencies):
+	var state = CG_CommandState.new()
 	
 	if thread_execution_mode == ThreadExecutionMode.SIMULTANEOUS:
 		pass
