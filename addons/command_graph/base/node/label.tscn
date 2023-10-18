@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://xwaorvsmy33w"]
+
+[ext_resource type="Script" path="res://addons/command_graph/base/node/label.gd" id="1_i3xgl"]
+
+[node name="Label" type="GraphNode"]
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_i3xgl")
+
+[node name="CommandID" type="LineEdit" parent="."]
+layout_mode = 2
+placeholder_text = "Command ID"
+expand_to_text_length = true

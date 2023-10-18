@@ -34,19 +34,19 @@ func get_id() -> String:
 
 ## Return's the command type's ID.
 static func get_editor_id() -> String:
-	return _get_editor_id()
+	return "command"
 
 ## Returns the command type's name.
 static func get_editor_name() -> String:
-	return _get_editor_name()
+	return "INVALID COMMAND"
 
 ## Returns the command type's description.
 static func get_editor_description() -> String:
-	return _get_editor_description()
+	return ""
 
 ## Returns the path to the CommandGraphNode scene used to edit the command type.
 static func get_editor_scene_path() -> String:
-	return _get_editor_scene_path()
+	return ""
 
 
 ## Called on each of the sequence's commands whenever a command's ID changes (or it's deleted, if "to" is blank).
@@ -57,23 +57,6 @@ func update_command_references(from: String, to: String) -> void:
 ## Begins execution, returning the state of the command.
 func execute(dependencies: CG_CommandDependencies) -> CG_CommandState:
 	return _execute(dependencies)
-
-
-## Virtual
-static func _get_editor_id() -> String:
-	return "command"
-
-## Virtual
-static func _get_editor_name() -> String:
-	return "Abstract Command"
-
-## Virtual
-static func _get_editor_description() -> String:
-	return "The base command type."
-
-## Virtual
-static func _get_editor_scene_path() -> String:
-	return ""
 
 
 ## Virtual

@@ -8,7 +8,6 @@ signal command_added(command: CG_Command)
 signal removing_command(command: CG_Command)
 
 
-@export var default_entrypoint_id: String = ""
 @export var _commands: Dictionary = {}
 
 

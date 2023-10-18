@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://1ixilf7i1hbi"]
+
+[ext_resource type="Script" path="res://addons/command_graph/base/node/goto.gd" id="1_drym4"]
+
+[node name="Goto" type="GraphNode"]
+title = "goto"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_drym4")
+
+[node name="Notes" type="LineEdit" parent="."]
+layout_mode = 2
+expand_to_text_length = true

@@ -32,8 +32,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-right_disconnects = true
 show_grid = false
+right_disconnects = true
 connection_lines_antialiased = false
 show_zoom_label = true
 

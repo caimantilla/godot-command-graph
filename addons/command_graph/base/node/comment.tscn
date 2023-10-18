@@ -4,7 +4,6 @@
 
 [node name="comment" type="GraphNode"]
 title = "Comment"
-comment = true
 slot/0/left_enabled = false
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -17,11 +16,8 @@ slot/0/draw_stylebox = true
 script = ExtResource("1_ke3fm")
 
 [node name="CommentTextEdit" type="TextEdit" parent="."]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(192, 64)
 layout_mode = 2
 wrap_mode = 1
 scroll_smooth = true
 scroll_fit_content_height = true
-
-[connection signal="text_changed" from="CommentTextEdit" to="." method="synchronize"]

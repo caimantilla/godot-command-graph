@@ -25,7 +25,6 @@ slot/1/draw_stylebox = true
 script = ExtResource("1_fatuy")
 
 [node name="SecondsSpinbox" type="SpinBox" parent="."]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(192, 0)
 layout_mode = 2
 min_value = 0.05
@@ -37,11 +36,7 @@ prefix = "Wait"
 suffix = "Second(s)"
 
 [node name="IgnoreTimeScaleCheckBox" type="CheckBox" parent="."]
-unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Even if the game slows down or speeds up, the time to wait will remain constant.
 This should usually be disabled."
 text = "Ignore Time Scale"
-
-[connection signal="value_changed" from="SecondsSpinbox" to="." method="synchronize" unbinds=1]
-[connection signal="toggled" from="IgnoreTimeScaleCheckBox" to="." method="synchronize" unbinds=1]

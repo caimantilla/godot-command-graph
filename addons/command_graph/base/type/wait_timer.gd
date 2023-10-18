@@ -7,23 +7,23 @@ extends CG_Command
 @export var ignore_time_scale: bool = false
 
 
-static func _get_editor_id():
+static func get_editor_id():
 	return "wait_timer"
 
-static func _get_editor_name():
+static func get_editor_name():
 	return "Wait Timer"
 
-static func _get_editor_description():
+static func get_editor_description():
 	return "Waits a set number of seconds before proceeding."
 
-static func _get_editor_scene_path():
+static func get_editor_scene_path():
 	return "res://addons/command_graph/base/node/wait_timer.tscn"
 
 
 func _execute(dependencies):
 	var state = CG_CommandState.new()
 	
-	if dependencies.tree == null or is_zero_approx(seconds) or seconds < 0.0:
+	if is_zero_approx(seconds) or seconds < 0.0:
 		state.finish(next_command_id)
 	else:
 		var timer = dependencies.tree.create_timer(seconds, true, false, ignore_time_scale)

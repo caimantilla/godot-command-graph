@@ -126,6 +126,7 @@ func get_outgoing_connections() -> Array:
 
 func set_outgoing_connection(outgoing_connection) -> void:
 	outgoing_connection["slot"] = output_get_slot_from_port(outgoing_connection["port"])
+	print(outgoing_connection)
 	_set_outgoing_connection(outgoing_connection)
 
 
@@ -133,14 +134,17 @@ func set_outgoing_connection(outgoing_connection) -> void:
 # Utility!!
 
 func input_get_slot_from_port(port: int) -> int:
-	return get_input_port_slot(port)
+	var slot: int = get_input_port_slot(port)
+	# REFER TO output_get_slot_from_port() COMMENTS
+	slot -= 1
+	return slot
 
 
 func input_get_port_from_slot(slot: int) -> int:
 	var port: int = slot
 	#var open_count: int = get_input_port_count()
 	
-	for i in slot:
+	for i in range(slot):
 		if not is_slot_enabled_left(i):
 			port -= 1
 	
@@ -148,7 +152,11 @@ func input_get_port_from_slot(slot: int) -> int:
 
 
 func output_get_slot_from_port(port: int) -> int:
-	return get_output_port_slot(port)
+	var slot: int = get_output_port_slot(port)
+	# TODO: WHAT THE FUCK HAPPENED IN 4.2??? WHY IS THE SLOT RETURNING 1 WHEN THE PORT IS 0 WTF WTF WTF
+	# ANYWAYS SEE IF DECREMENTING FIXES IT........ LITERALLY WTF
+	slot -= 1
+	return slot
 
 
 func output_get_port_from_slot(slot: int) -> int:

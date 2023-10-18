@@ -5,16 +5,16 @@ extends CG_Command
 @export var next_command_id: String = ""
 
 
-static func _get_editor_id():
+static func get_editor_id():
 	return "label"
 
-static func _get_editor_name():
+static func get_editor_name():
 	return "Label"
 
-static func _get_editor_description():
+static func get_editor_description():
 	return "A named point in the sequence.\nUnlike other commands, the ID changes to match the name given."
 
-static func _get_editor_scene_path():
+static func get_editor_scene_path():
 	return "res://addons/command_graph/base/node/label.tscn"
 
 

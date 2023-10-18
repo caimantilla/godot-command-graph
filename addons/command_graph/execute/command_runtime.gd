@@ -37,9 +37,6 @@ func execute(from_command: String = "") -> void:
 		notify_finished()
 		return
 	
-	if from_command.is_empty():
-		from_command = sequence.default_entrypoint_id
-	
 	if not sequence.has_command(from_command):
 		print_debug('Command "' + str(from_command) + '" not found.')
 		return

@@ -7,6 +7,7 @@ const PROJECT_SETTING_COMMAND_SCRIPT_PATHS: String = "command_graph/config/comma
 const _DEFAULT_COMMAND_SCRIPT_PATHS = [
 	"res://addons/command_graph/base/type/comment.gd",
 	"res://addons/command_graph/base/type/wait_timer.gd",
+	"res://addons/command_graph/base/type/goto.gd",
 ]
 
 var CommandSequenceEditor = load("res://addons/command_graph/editor/command_sequence_editor.tscn")

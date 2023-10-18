@@ -2,13 +2,16 @@
 extends CG_CommandGraphNode
 
 
-@onready var seconds_spinbox = %"SecondsSpinbox"
-@onready var ignore_time_scale_checkbox = %"IgnoreTimeScaleCheckBox"
+@onready var seconds_spinbox = $SecondsSpinbox
+@onready var ignore_time_scale_checkbox = $IgnoreTimeScaleCheckBox
 
 
 func _initialize():
 	seconds_spinbox.value = command.seconds
 	ignore_time_scale_checkbox.button_pressed = command.ignore_time_scale
+	
+	seconds_spinbox.value_changed.connect(synchronize.unbind(1))
+	ignore_time_scale_checkbox.toggled.connect(synchronize.unbind(1))
 
 
 func _synchronize():
